@@ -4,6 +4,7 @@ import time
 from trafficlight import State, TrafficLight
 from gpiozero import LED, Button
 from unbouncer import Unbouncer
+from pins import NORTH_GREEN, NORTH_YELLOW, NORTH_RED, SOUTH_GREEN, SOUTH_YELLOW, SOUTH_RED, EAST_GREEN, EAST_YELLOW, EAST_RED, WEST_GREEN, WEST_YELLOW, WEST_RED, BUTTON
 
 
 def toggle_lights(north, south, east, west):
@@ -23,23 +24,17 @@ def toggle_lights(north, south, east, west):
     west.change_to_opposite(east_west_state)
 
 
-NorthGreen, NorthYellow, NorthRed = 2, 3, 4
-SouthGreen, SouthYellow, SouthRed = 17, 27, 22
-EastGreen, EastYellow, EastRed = 5, 6, 13
-WestGreen, WestYellow, WestRed = 19, 26, 21
-ButtonPin = 20
-
-north = TrafficLight(NorthGreen, NorthYellow, NorthRed)
-south = TrafficLight(SouthGreen, SouthYellow, SouthRed)
-east = TrafficLight(EastGreen, EastYellow, EastRed)
-west = TrafficLight(WestGreen, WestYellow, WestRed)
+north = TrafficLight(NORTH_GREEN, NORTH_YELLOW, NORTH_RED)
+south = TrafficLight(SOUTH_GREEN, SOUTH_YELLOW, SOUTH_RED)
+east = TrafficLight(EAST_GREEN, EAST_YELLOW, EAST_RED)
+west = TrafficLight(WEST_GREEN, WEST_YELLOW, WEST_RED)
 
 north.change_state(State.GREEN)
 south.change_state(State.GREEN)
 east.change_state(State.RED)
 west.change_state(State.RED)
 
-button = Button(ButtonPin)
+button = Button(BUTTON)
 
 
 
@@ -49,17 +44,16 @@ button = Button(ButtonPin)
 # stable_state = threading.Event()
 
 # Create a timer
-timer = threading.Timer(5.0)
+timer = None
 
 def reset_timer():
+    global timer
     timer.cancel()
     toggle_lights(north, south, east, west)
     timer = threading.Timer(5.0, reset_timer)
     timer.start()
 
-
 timer = threading.Timer(5.0, reset_timer)
-
 timer.start()
 
 def on_stable_click(state: bool):
