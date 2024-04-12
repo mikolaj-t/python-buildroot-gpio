@@ -41,12 +41,33 @@ west.change_state(State.RED)
 
 button = Button(ButtonPin)
 
+
+
+# # Create an event for stopping the thread
+# stop = threading.Event()
+# # Create an event for the stable state
+# stable_state = threading.Event()
+
+# Create a timer
+timer = threading.Timer(5.0)
+
+def reset_timer():
+    timer.cancel()
+    toggle_lights(north, south, east, west)
+    timer = threading.Timer(5.0, reset_timer)
+    timer.start()
+
+
+timer = threading.Timer(5.0, reset_timer)
+
+timer.start()
+
 def on_stable_click(state: bool):
     if state == True:
         return
     reset_timer()
 
-def reset_timer():
+def reset_timer(t):
     timer.cancel()
     toggle_lights(north, south, east, west)
     timer = threading.Timer(5.0, reset_timer)
@@ -58,15 +79,6 @@ unbouncer = Unbouncer(on_stable_click, 0.1)
 button.when_pressed = unbouncer.on_clicked
 button.when_released = unbouncer.on_clicked
 
-
-# # Create an event for stopping the thread
-# stop = threading.Event()
-# # Create an event for the stable state
-# stable_state = threading.Event()
-
-# Create a timer
-timer = threading.Timer(5.0, reset_timer)
-timer.start()
 
 # def worker():
 #     while not stop.is_set():
