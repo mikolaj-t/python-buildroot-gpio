@@ -61,7 +61,7 @@ def on_stable_click(state: bool):
         return
     reset_timer()
 
-def reset_timer(t):
+def reset_timer():
     timer.cancel()
     toggle_lights(north, south, east, west)
     timer = threading.Timer(5.0, reset_timer)
