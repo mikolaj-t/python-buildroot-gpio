@@ -57,15 +57,10 @@ timer = threading.Timer(5.0, reset_timer)
 timer.start()
 
 def on_stable_click(state: bool):
+    global timer
     if state == True:
         return
     reset_timer()
-
-def reset_timer():
-    timer.cancel()
-    toggle_lights(north, south, east, west)
-    timer = threading.Timer(5.0, reset_timer)
-    timer.start()
 
 
 unbouncer = Unbouncer(on_stable_click, 0.1)
